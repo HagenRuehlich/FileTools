@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from   tkinter import filedialog
+from fileUtilities import *  
 import datetime
 import shutil
 
@@ -31,19 +32,18 @@ class CPhotoFileSubFolderSorter ():
                 self.prepareMovePhotoFileToSubFolder (aLocalFile)
 
     def isExtentionMatching (self, pFile):
-        self.validateStringValue (pFile)
         bReturn = False
-        sExtend = os.path.splitext (pFile)[1]
-        sExtend = sExtend.lower()
-        if ((sExtend == PHOTO_FILE_EXT) or (sExtend == PHOTO_RAW_EXT)):
+        if ((isExtentMatching (PHOTO_FILE_EXT, pFile) or (isExtentMatching (PHOTO_RAW_EXT, pFile)))):
             bReturn = True
         return bReturn
         
 
     def validateUserRights (self):
-        """ Prüft ob im Verzeichnis _BaseFolder ausreichende Rechte gegeben sind  """
-        if not os.access (self._BaseFolder, os.W_OK):
-            raise OSError ("Keine Schreibrechte im Verzeichnis " + self._BaseFolder)
+             """ Prüft ob im Verzeichnis _BaseFolder ausreichende Rechte gegeben sind  """
+             validateUserRights (self._BaseFolder)
+             
+             
+        
 
     def prepareMovePhotoFileToSubFolder (self, paLocalFile):
         """paLocalFile:  eine lokale Datei in _BaseFolder, die Methode prüft das Erstellungsdatum der Datei
@@ -106,11 +106,8 @@ class CPhotoFileSubFolderSorter ():
         return datetime.datetime.fromtimestamp(t)
 
     def joinToAbsPath (self, sPath1, sPath2):
-        self.validateStringValue (sPath1)
-        self.validateStringValue (sPath2)
-        sReturnPath = os.path.join (sPath1, sPath2)
-        sReturnPath = os.path.abspath (sReturnPath)
-        return sReturnPath
+        return joinToAbsPath (sPath1, sPath2)
+        
     
 
     def ensureFolderExists (self, psFolder):
@@ -119,8 +116,8 @@ class CPhotoFileSubFolderSorter ():
             os.mkdir (psFolder)
             
     def validateStringValue (self, psValue):
-        assert type (psValue) == str
-        assert psValue != ""
+        validateStringValue (psValue)
+        
         
 
 
