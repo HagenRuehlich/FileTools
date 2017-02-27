@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
-from   tkinter import filedialog
-from fileUtilities import *  
+from tkinter import filedialog
+from FileUtilities import *
 import datetime
 import shutil
 
-PHOTO_FILE_EXT = ".jpg"
-PHOTO_RAW_EXT = ".nef"
 
 class CPhotoFileSubFolderSorter ():
     """Klasse stellt einen Sortierer für Dateien bereit: 
@@ -14,8 +12,7 @@ class CPhotoFileSubFolderSorter ():
        für jeden Tag, an dem eine der Dateien erstellt wurde, wird ein Unterverzeichnis
        egeneriert und alle entsprechenden Dateien dort einsortiert"""
     def __init__ (self, psBaseFolder):
-        assert type (psBaseFolder) == str
-        assert psBaseFolder != ""
+        verifyPath (psBaseFolder)
         self._BaseFolder = psBaseFolder
         
 
@@ -23,42 +20,40 @@ class CPhotoFileSubFolderSorter ():
         
     def run (self):
         """ führt die Sortierung durch"""
-        self.validateStringValue (self._BaseFolder)
-        self.validateUserRights ()
-        #Alle Dateien des Verzeichnisses einlesen
+        verifyPath (self._BaseFolder)
+        testPathWritability (self._BaseFolder)
+        #Read the content of the base folder....
         baseFolderContent = os.listdir (self._BaseFolder)
         for aLocalFile in baseFolderContent:
             if self.isExtentionMatching (aLocalFile):
                 self.prepareMovePhotoFileToSubFolder (aLocalFile)
 
-    def isExtentionMatching (self, pFile):
+    def isExtentionMatching (self, psFile):
         bReturn = False
-        if ((isExtentMatching (PHOTO_FILE_EXT, pFile) or (isExtentMatching (PHOTO_RAW_EXT, pFile)))):
+        if ((isExtentionMatching (PHOTO_FILE_EXT, psFile) or (isExtentionMatching (PHOTO_RAW_EXT, psFile)):
             bReturn = True
         return bReturn
         
 
     def validateUserRights (self):
-             """ Prüft ob im Verzeichnis _BaseFolder ausreichende Rechte gegeben sind  """
-             validateUserRights (self._BaseFolder)
-             
-             
-        
+        """ Prüft ob im Verzeichnis _BaseFolder ausreichende Rechte gegeben sind  """
+        if not os.access (self._BaseFolder, os.W_OK):
+            raise OSError ("Keine Schreibrechte im Verzeichnis " + self._BaseFolder)
 
     def prepareMovePhotoFileToSubFolder (self, paLocalFile):
         """paLocalFile:  eine lokale Datei in _BaseFolder, die Methode prüft das Erstellungsdatum der Datei
            generiert, falls noch nicht vorhanden  folgende Subfolder Struktur Jahr, Monat, Tag und verschiebt die Datei
            dann entsprechend"""
-        self.validateStringValue (paLocalFile)
+        verifyPath (paLocalFile)
         subFolder = self.prepareSubFolder (paLocalFile)
         self.movePhotoFileToSubFolder (paLocalFile, subFolder)
 
 
     def prepareSubFolder (self, psLocalFile):
-        self.validateStringValue (psLocalFile)
+        verifyPath (psLocalFile)
         subFolder = ""
         subFolderYear = self.prepareSubFolderYear (psLocalFile)
-        self.validateStringValue (subFolderYear)
+        verifyPath (subFolderYear)
         subFolderMonth = self.prepareSubFolderMonth (psLocalFile,subFolderYear)
         subFolderDay = self.prepareSubFolderDay (psLocalFile,subFolderMonth)
         subFolder = subFolderDay
@@ -66,7 +61,7 @@ class CPhotoFileSubFolderSorter ():
 
     def prepareSubFolderYear (self, psLocalFile):
         subFolderYear = ""
-        self.validateStringValue (psLocalFile)
+        verifyPath (psLocalFile)
         fileCreationDate = self.getLocalFileCreationDate (psLocalFile)
         sYear = str (fileCreationDate.year)
         subFolderYear = self.joinToAbsPath (self._BaseFolder, sYear)
@@ -75,8 +70,8 @@ class CPhotoFileSubFolderSorter ():
 
     def prepareSubFolderMonth (self, psLocalFile, psSubFolderYear):
         sSubFolderMonth = ""
-        self.validateStringValue (psLocalFile)
-        self.validateStringValue (psSubFolderYear)
+        verifyPath (psLocalFile)
+        verifyPath (psSubFolderYear)
         fileCreationDate = self.getLocalFileCreationDate (psLocalFile)
         assert fileCreationDate.month in dMonthsStr.keys ()
         sSubFolderMonth = self.joinToAbsPath (psSubFolderYear, dMonthsStr [fileCreationDate.month])
@@ -85,8 +80,8 @@ class CPhotoFileSubFolderSorter ():
         
     def prepareSubFolderDay (self, psLocalFile, psSubFolderMonth):
         sSubFolderDay = ""
-        self.validateStringValue (psLocalFile)
-        self.validateStringValue (psSubFolderMonth)
+        verifyPath (psLocalFile)
+        verifyPath (psSubFolderMonth)
         fileCreationDate = self.getLocalFileCreationDate (psLocalFile)
         sSubFolderDay = self.joinToAbsPath (psSubFolderMonth, str (fileCreationDate.day))
         self.ensureFolderExists (sSubFolderDay)
@@ -95,9 +90,9 @@ class CPhotoFileSubFolderSorter ():
         
 
     def movePhotoFileToSubFolder (self, psLocalFile, psSubFolder):
-        self.validateStringValue (psLocalFile)
-        self.validateStringValue (psSubFolder)
-        self.validateStringValue (self._BaseFolder)
+        verifyPath (psLocalFile)
+        verifyPath (psSubFolder)
+        verifyPath (self._BaseFolder)
         shutil.move (self.joinToAbsPath (self._BaseFolder, psLocalFile), self.joinToAbsPath (psSubFolder, psLocalFile))
 
     def getLocalFileCreationDate(self, psLocalFile):
@@ -106,18 +101,14 @@ class CPhotoFileSubFolderSorter ():
         return datetime.datetime.fromtimestamp(t)
 
     def joinToAbsPath (self, sPath1, sPath2):
-        return joinToAbsPath (sPath1, sPath2)
-        
+        return joinToAbsPath(sPath1, sPath2)
     
 
     def ensureFolderExists (self, psFolder):
-        self.validateStringValue (psFolder)
+        verifyPath (psFolder)
         if not os.path.exists (psFolder):
             os.mkdir (psFolder)
             
-    def validateStringValue (self, psValue):
-        validateStringValue (psValue)
-        
         
 
 
