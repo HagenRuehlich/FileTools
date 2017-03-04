@@ -130,7 +130,8 @@ class CPhotoFileRenameTest (unittest.TestCase):
         self.assertEqual (iNumItems, 5)
         tResult = (self._TEST_FOLDER_LEVEL31_NAME, self._TEST_FOLDER_LEVEL32_NAME, self._TEST_FOLDER_LEVEL2_NAME + "_0001" + PHOTO_FILE_EXT, self._TEST_FOLDER_LEVEL2_NAME + "_0002" + PHOTO_FILE_EXT, self._TEST_FOLDER_LEVEL2_NAME + "_0003" + PHOTO_FILE_EXT)
         for aFolderItem in testFolderContent:
-            self.assertEqual (True, aFolderItem in tResult)
+            bIsIn = aFolderItem in tResult
+            self.assertEqual (True, bIsIn)
         
         
         
@@ -144,7 +145,8 @@ class CPhotoFileRenameTest (unittest.TestCase):
         self.assertEqual (iNumItems, 3)
         tResult = (self._TEST_FOLDER_LEVEL31_NAME + "_0001" + PHOTO_FILE_EXT, self._TEST_FOLDER_LEVEL31_NAME + "_0002" + PHOTO_FILE_EXT, self._TEST_FOLDER_LEVEL31_NAME + "_0003" + PHOTO_FILE_EXT)
         for aFolderItem in testFolderContent:
-            self.assertEqual (True, aFolderItem in tResult)
+            bIsIn = aFolderItem in tResult
+            self.assertEqual (True, bIsIn)
        
     
 
