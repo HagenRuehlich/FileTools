@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import enum
-from FileUtilities import *
+from fileUtilities import *
 
 cMAXFOLDERITEMS = 10000
 cNUMBER_SEPERATOR = "_"
