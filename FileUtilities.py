@@ -62,6 +62,17 @@ def getFileFromAbsPath (psAbsPath):
     verifyPath (psAbsPath)
     return getPartOfAbsPath (psAbsPath, cFILE)
 
+def getDriveFromAbsPath (psAbsPath):
+    verifyPath (psAbsPath)
+    return os.path.splitdrive (psAbsPath)[0]
+
+def doesDriveExist (psAbsPath):
+    bDriveExists = False
+    sDrive = getDriveFromAbsPath (psAbsPath)
+    if sDrive != "" :
+        bDriveExists = os.path.exists (sDrive)
+    return bDriveExists
+
 def getInnerFolderFromAbsFile (psAbsFile):
     """Return the sub folder were the file is in, e.g. for n"c:\data\photos\dcim32.jpg" it returns "photos"""
     verifyPath (psAbsFile)
@@ -95,6 +106,11 @@ def createFile (psAbsFolder, psFile):
 def createFolder (psAbsFolder):
     verifyPath (psAbsFolder)
     os.mkdir (psAbsFolder)
+
+def createFolderStructure (psAbsFolder):
+    verifyPath (psAbsFolder)
+    os.makedirs (psAbsFolder)
+    
 
 def isJoinedAbsPathFolder (psAbsFolder, psFolderItem):
     """Joines psAbsFolder and psFolderItem to an absolute path and returns True is the reuslt is folder, else False"""

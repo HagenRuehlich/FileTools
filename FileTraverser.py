@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import enum
-from fileUtilities import *
+from FileUtilities import *
 
 cMAXFOLDERITEMS = 10000
 cNUMBER_SEPERATOR = "_"
@@ -115,7 +115,7 @@ class CFileTraverserDeleter (CFileTraverser):
     def logHintSkippedFiles (self):
         self.logHint (str (self._iSkippedOperations) + " " + self.getFileType() + " files were write protected and could not be deleted.")            
 
-class CFileTraverserPhotoRenames (CFileTraverser):
+class CFileTraverserPhotoRenamer (CFileTraverser):
     """This classe provides a traverser which renames photo files (JPG) this way:
        first part of the new name comes from the sub folder the file is in, the seconnd and last one is a running number,
        e.g: "Dezember_2016_Weihnachten_0004.jpg"""
@@ -261,7 +261,7 @@ class CFileTraverserPhotoRenames (CFileTraverser):
         
 
 if __name__ == "__main__":
-    renamer = CFileTraverserPhotoRenames ("C:\\Datenbereich\\Fotos\\Fotos 2017\\Februar_2017_Theresa_Julia_Fasching\\")
+    renamer = CFileTraverserPhotoRenamer ("C:\\Datenbereich\\Fotos\\Fotos 2017\\Februar_2017_Theresa_Julia_Fasching\\")
     renamer.travers ()
     
                       
